@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,12 @@ namespace GateDiff
         public MainWindow()
         {
             InitializeComponent();
+
+            var data = Tuple.Create(
+                new FileInfo(@"C:\test\1.jpg"),
+                new FileInfo(@"C:\test\2.jpg"));
+
+            layoutRoot.DataContext = data;
         }
     }
 }
