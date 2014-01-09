@@ -35,17 +35,20 @@ namespace GateDiff
             var right = args.Length >= 3 ? new FileInfo(args[2]) : null;
 
             String diffProgram = null;
-            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            if (left != null && right != null)
             {
-                var extensions = key.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
-                var foundDiffer = extensions.Contains(left.Extension)
-                    || extensions.Contains(right.Extension)
-                    || extensions.Contains(".*");
-                if (foundDiffer)
+                foreach (var key in ConfigurationManager.AppSettings.AllKeys)
                 {
-                    diffProgram = ConfigurationManager.AppSettings[key];
-                    diffProgram = String.IsNullOrWhiteSpace(diffProgram) ? null : diffProgram;
-                    break;
+                    var extensions = key.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
+                    var foundDiffer = extensions.Contains(left.Extension)
+                        || extensions.Contains(right.Extension)
+                        || extensions.Contains(".*");
+                    if (foundDiffer)
+                    {
+                        diffProgram = ConfigurationManager.AppSettings[key];
+                        diffProgram = String.IsNullOrWhiteSpace(diffProgram) ? null : diffProgram;
+                        break;
+                    }
                 }
             }
 
