@@ -1,7 +1,7 @@
 ﻿<Window x:Class="GateDiff.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="GateDiff" Height="350" Width="525">
     <Grid Name="layoutRoot">
         <Grid.Resources>
             <Style TargetType="{x:Type Border}">
@@ -14,6 +14,16 @@
             </Style>
             <Style TargetType="{x:Type Image}">
                 <Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Path=DataContext}" />
+            </Style>
+            <Style TargetType="{x:Type ScrollViewer}">
+                <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsChecked, ElementName=chkActualSize}" Value="True">
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+                        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
@@ -33,7 +43,9 @@
             <TextBlock Text="{Binding Item1.Length}" TextAlignment="Right" />
         </Border>
         <Border Grid.Column="0" Grid.Row="2">
-            <Image Source="{Binding Item1.FullName}" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            <ScrollViewer>
+                <Image Source="{Binding Item1.FullName}" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+            </ScrollViewer>
         </Border>
         <Border Grid.Column="1" Grid.Row="0" Name="abc">
             <TextBlock Text="{Binding Item2.FullName}" />
@@ -42,7 +54,9 @@
             <TextBlock Text="{Binding Item2.Length}" />
         </Border>
         <Border Grid.Column="1" Grid.Row="2">
-            <Image Source="{Binding Item2.FullName}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <ScrollViewer>
+                <Image Source="{Binding Item2.FullName}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Window>
