@@ -27,9 +27,12 @@ namespace GateDiff
         {
             InitializeComponent();
 
-            var data = Tuple.Create(
-                new FileInfo(@"C:\test\1.jpg"),
-                new FileInfo(@"C:\test\2.jpg"));
+            string[] args = Environment.GetCommandLineArgs();
+
+            var left = args.Length >= 3 ? new FileInfo(args[1]) : null;
+            var right = args.Length >= 3 ? new FileInfo(args[2]) : null;
+
+            var data = Tuple.Create(left, right);
 
             layoutRoot.DataContext = data;
         }
