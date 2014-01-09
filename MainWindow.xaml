@@ -40,7 +40,7 @@
             <TextBlock Text="{Binding Item1.FullName}" TextAlignment="Right" />
         </Border>
         <Border Grid.Column="0" Grid.Row="1">
-            <TextBlock Text="{Binding Item1.Length}" TextAlignment="Right" />
+            <TextBlock Text="{Binding Item1.Length, Mode=OneWay, StringFormat='\{0:N0\} bytes'}" TextAlignment="Right" />
         </Border>
         <Border Grid.Column="0" Grid.Row="2">
             <ScrollViewer>
@@ -51,7 +51,7 @@
             <TextBlock Text="{Binding Item2.FullName}" />
         </Border>
         <Border Grid.Column="1" Grid.Row="1">
-            <TextBlock Text="{Binding Item2.Length}" />
+            <TextBlock Text="{Binding Item2.Length, Mode=OneWay, StringFormat='\{0:N0\} bytes'}" />
         </Border>
         <Border Grid.Column="1" Grid.Row="2">
             <ScrollViewer>
