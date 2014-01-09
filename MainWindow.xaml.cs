@@ -1,6 +1,8 @@
 ﻿using GateDiff.Properties;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,9 +34,54 @@ namespace GateDiff
             var left = args.Length >= 3 ? new FileInfo(args[1]) : null;
             var right = args.Length >= 3 ? new FileInfo(args[2]) : null;
 
-            var data = Tuple.Create(left, right);
+            String diffProgram = null;
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                var extensions = key.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
+                var foundDiffer = extensions.Contains(left.Extension)
+                    || extensions.Contains(right.Extension)
+                    || extensions.Contains(".*");
+                if (foundDiffer)
+                {
+                    diffProgram = ConfigurationManager.AppSettings[key];
+                    diffProgram = String.IsNullOrWhiteSpace(diffProgram) ? null : diffProgram;
+                }
+            }
 
-            layoutRoot.DataContext = data;
+            if (diffProgram != null)
+            {
+                Application.Current.Shutdown();
+
+                ProcessStartInfo app = new ProcessStartInfo(diffProgram, BuildCommand(left.FullName, right.FullName));
+                Process.Start(app);
+            }
+            else
+            {
+                var data = Tuple.Create(left, right);
+                layoutRoot.DataContext = data;
+            }
+        }
+
+        private static string BuildCommand(params string[] args)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string a in args)
+            {
+                if (string.IsNullOrEmpty(a))
+                    continue;
+
+                if (builder.Length > 0)
+                    builder.Append(" ");
+                builder.Append(ArgumentEscape(a));
+            }
+            return builder.ToString();
+        }
+
+        private static string ArgumentEscape(string arg)
+        {
+            if (arg.Contains(@" "))
+                return @"""" + arg + @"""";
+            return arg;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
