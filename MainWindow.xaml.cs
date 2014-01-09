@@ -45,6 +45,7 @@ namespace GateDiff
                 {
                     diffProgram = ConfigurationManager.AppSettings[key];
                     diffProgram = String.IsNullOrWhiteSpace(diffProgram) ? null : diffProgram;
+                    break;
                 }
             }
 
