@@ -54,16 +54,20 @@ namespace GateDiff
 
             if (diffProgram != null)
             {
-                Application.Current.Shutdown();
+                ProcessStartInfo command = new ProcessStartInfo(diffProgram, BuildCommand(left.FullName, right.FullName));
+                command.UseShellExecute = false;
+                command.RedirectStandardOutput = true;
+                Process app = Process.Start(command);
 
-                ProcessStartInfo app = new ProcessStartInfo(diffProgram, BuildCommand(left.FullName, right.FullName));
-                Process.Start(app);
+                app.StandardOutput.ReadToEnd();
+                app.WaitForExit();
+
+                Application.Current.Shutdown();
+                return;
             }
-            else
-            {
-                var data = Tuple.Create(left, right);
-                layoutRoot.DataContext = data;
-            }
+
+            var data = Tuple.Create(left, right);
+            layoutRoot.DataContext = data;
         }
 
         private static string BuildCommand(params string[] args)
