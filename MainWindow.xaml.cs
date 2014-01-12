@@ -54,16 +54,19 @@ namespace GateDiff
 
             if (diffProgram != null)
             {
-                ProcessStartInfo command = new ProcessStartInfo(diffProgram, BuildCommand(left.FullName, right.FullName));
-                command.UseShellExecute = false;
-                command.RedirectStandardOutput = true;
-                Process app = Process.Start(command);
+                using (DiffFile leftFile = new DiffFile(left), rightFile = new DiffFile(right))
+                {
+                    ProcessStartInfo command = new ProcessStartInfo(diffProgram, BuildCommand(leftFile.Path, rightFile.Path));
+                    command.UseShellExecute = false;
+                    command.RedirectStandardOutput = true;
+                    Process app = Process.Start(command);
 
-                app.StandardOutput.ReadToEnd();
-                app.WaitForExit();
+                    app.StandardOutput.ReadToEnd();
+                    app.WaitForExit();
 
-                Application.Current.Shutdown();
-                return;
+                    Application.Current.Shutdown();
+                    return;
+                }
             }
 
             var data = Tuple.Create(left, right);
