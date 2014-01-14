@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GateDiff", "App\GateDiff.csproj", "{F91417A1-3983-4F95-93EB-5559CD3F4369}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GateShell", "Extension\GateShell.csproj", "{B63F458C-1CFD-4541-917C-835C66ADC181}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{F91417A1-3983-4F95-93EB-5559CD3F4369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F91417A1-3983-4F95-93EB-5559CD3F4369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F91417A1-3983-4F95-93EB-5559CD3F4369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63F458C-1CFD-4541-917C-835C66ADC181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63F458C-1CFD-4541-917C-835C66ADC181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63F458C-1CFD-4541-917C-835C66ADC181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63F458C-1CFD-4541-917C-835C66ADC181}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
