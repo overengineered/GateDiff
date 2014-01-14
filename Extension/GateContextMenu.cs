@@ -45,17 +45,34 @@ namespace GateShell
 
             if (mostRecentPath == null)
             {
-                string menuLabel = "Remember";
-                ToolStripMenuItem item = new ToolStripMenuItem { Text = menuLabel };
+                ToolStripMenuItem item = new ToolStripMenuItem {
+                    Text = Res.Remember_for_comparison,
+                    Image = Res.Remember
+                };
                 item.Click += this.OnRemember;
                 menu.Items.Add(item);
             }
             else
             {
-                string menuLabel = String.Format("Compare to {0}", System.IO.Path.GetFileName(mostRecentPath));
-                ToolStripMenuItem item = new ToolStripMenuItem { Text = menuLabel };
+                ToolStripMenuItem item = new ToolStripMenuItem {
+                    Text = String.Format(Res.Compare_to_X, System.IO.Path.GetFileName(mostRecentPath)),
+                    Image = Res.Compare
+                };
                 item.Click += this.OnCompare;
                 menu.Items.Add(item);
+
+                ToolStripMenuItem subitem = new ToolStripMenuItem {
+                    Text = String.Format(Res.Remember_X, SelectedItemPaths.Single()),
+                    Image = Res.Remember
+                };
+                subitem.Click += this.OnRemember;
+
+                ToolStripMenuItem history = new ToolStripMenuItem() {
+                    Text = Res.Comparison_history
+                };
+                history.DropDownItems.Add(subitem);
+
+                menu.Items.Add(history);
             }
 
             return menu;
@@ -63,7 +80,7 @@ namespace GateShell
 
         private void OnRemember(object sender, EventArgs eventArgs)
         {
-            var path = this.SelectedItemPaths.Single();
+            var path = SelectedItemPaths.Single();
             m_registry.Value.InsertMruItem(MRU_KEY, path);
         }
 
