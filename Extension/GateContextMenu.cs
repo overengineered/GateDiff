@@ -2,9 +2,11 @@
 using SharpShell.SharpContextMenu;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -56,7 +58,8 @@ namespace GateShell
             {
                 ToolStripMenuItem item = new ToolStripMenuItem {
                     Text = String.Format(Res.Compare_to_X, System.IO.Path.GetFileName(mostRecentPath)),
-                    Image = Res.Compare
+                    Image = Res.Compare,
+                    Tag = mostRecentPath
                 };
                 item.Click += this.OnCompare;
                 menu.Items.Add(item);
@@ -86,7 +89,15 @@ namespace GateShell
 
         private void OnCompare(object sender, EventArgs eventArgs)
         {
-            MessageBox.Show("Not implemented", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            var left = item.Tag.ToString();
+            var right = SelectedItemPaths.Single();
+
+            var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var gateDiffExe = Path.Combine(assemblyDir, "GateDiff.exe");
+
+            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(" ", left, right));
+            Process.Start(command);
         }
     }
 }
