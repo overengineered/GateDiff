@@ -75,6 +75,20 @@ namespace GateShell
                 };
                 history.DropDownItems.Add(subitem);
 
+                history.DropDownItems.Add(new ToolStripSeparator());
+
+                foreach (string path in savedPaths)
+                {
+                    ToolStripMenuItem historyItem = new ToolStripMenuItem
+                    {
+                        Text = String.Format(Res.Compare_to_X, path),
+                        Image = Res.Compare,
+                        Tag = path
+                    };
+                    historyItem.Click += this.OnCompare;
+                    history.DropDownItems.Add(historyItem);
+                }
+
                 menu.Items.Add(history);
             }
 
