@@ -42,8 +42,11 @@ namespace GateShell
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
-            var savedPaths = m_registry.Value.GetMruItems(MRU_KEY).ToList();
-            String mostRecentPath = savedPaths.FirstOrDefault();
+            IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(MRU_KEY).ToList();
+            string mostRecentPath = savedPaths.FirstOrDefault();
+
+            string currentPath = SelectedItemPaths.Single();
+            savedPaths = savedPaths.Where(path => path != currentPath);
 
             if (mostRecentPath == null)
             {
@@ -56,13 +59,17 @@ namespace GateShell
             }
             else
             {
-                ToolStripMenuItem item = new ToolStripMenuItem {
-                    Text = String.Format(Res.Compare_to_X, System.IO.Path.GetFileName(mostRecentPath)),
-                    Image = Res.Compare,
-                    Tag = mostRecentPath
-                };
-                item.Click += this.OnCompare;
-                menu.Items.Add(item);
+                if (currentPath != mostRecentPath)
+                {
+                    ToolStripMenuItem item = new ToolStripMenuItem
+                    {
+                        Text = String.Format(Res.Compare_to_X, System.IO.Path.GetFileName(mostRecentPath)),
+                        Image = Res.Compare,
+                        Tag = mostRecentPath
+                    };
+                    item.Click += this.OnCompare;
+                    menu.Items.Add(item);
+                }
 
                 ToolStripMenuItem subitem = new ToolStripMenuItem {
                     Text = String.Format(Res.Remember_X, SelectedItemPaths.Single()),
