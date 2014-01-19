@@ -80,6 +80,15 @@ namespace GateShell {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compare {0} to {1}.
+        /// </summary>
+        internal static string Compare_X_to_Y {
+            get {
+                return ResourceManager.GetString("Compare_X_to_Y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to History.
         /// </summary>
         internal static string Comparison_history {

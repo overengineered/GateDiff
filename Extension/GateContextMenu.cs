@@ -25,9 +25,9 @@ namespace GateShell
             try
             {
                 List<string> paths = SelectedItemPaths.ToList();
-                if (paths.Count == 1)
+                if (paths.Count <= 2)
                 {
-                    return File.Exists(paths[0]);
+                    return paths.All(File.Exists);
                 }
 
                 return false;
@@ -40,12 +40,27 @@ namespace GateShell
 
         protected override ContextMenuStrip CreateMenu()
         {
+            List<string> selectionSet = SelectedItemPaths.ToList();
+
+            if (selectionSet.Count == 1)
+            {
+                return CreateSingleSelectionMenu(selectionSet[0]);
+            }
+            else if (selectionSet.Count == 2)
+            {
+                return CreatePairSelectionMenu(selectionSet[0], selectionSet[1]);
+            }
+
+            return null;
+        }
+
+        private ContextMenuStrip CreateSingleSelectionMenu(string currentPath)
+        {
             ContextMenuStrip menu = new ContextMenuStrip();
 
             IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(MRU_KEY).ToList();
             string mostRecentPath = savedPaths.FirstOrDefault();
 
-            string currentPath = SelectedItemPaths.Single();
             savedPaths = savedPaths.Where(path => path != currentPath);
 
             if (mostRecentPath == null)
@@ -61,9 +76,8 @@ namespace GateShell
             {
                 if (currentPath != mostRecentPath)
                 {
-                    ToolStripMenuItem item = new ToolStripMenuItem
-                    {
-                        Text = String.Format(Res.Compare_to_X, System.IO.Path.GetFileName(mostRecentPath)),
+                    ToolStripMenuItem item = new ToolStripMenuItem {
+                        Text = String.Format(Res.Compare_to_X, Path.GetFileName(mostRecentPath)),
                         Image = Res.Compare,
                         Tag = mostRecentPath
                     };
@@ -72,7 +86,7 @@ namespace GateShell
                 }
 
                 ToolStripMenuItem subitem = new ToolStripMenuItem {
-                    Text = String.Format(Res.Remember_X, SelectedItemPaths.Single()),
+                    Text = String.Format(Res.Remember_X, currentPath),
                     Image = Res.Remember
                 };
                 subitem.Click += this.OnRemember;
@@ -87,8 +101,7 @@ namespace GateShell
 
                 foreach (string path in savedPaths)
                 {
-                    ToolStripMenuItem historyItem = new ToolStripMenuItem
-                    {
+                    ToolStripMenuItem historyItem = new ToolStripMenuItem {
                         Text = String.Format(Res.Compare_to_X, path),
                         Image = Res.Compare,
                         Tag = path
@@ -103,6 +116,21 @@ namespace GateShell
             return menu;
         }
 
+        private ContextMenuStrip CreatePairSelectionMenu(string path1, string path2)
+        {
+            ContextMenuStrip menu = new ContextMenuStrip();
+
+            ToolStripMenuItem item = new ToolStripMenuItem {
+                Text = String.Format(Res.Compare_X_to_Y, Path.GetFileName(path2), Path.GetFileName(path1)),
+                Image = Res.Compare,
+                Tag = path2
+            };
+            item.Click += this.OnCompare;
+            menu.Items.Add(item);
+
+            return menu;
+        }
+
         private void OnRemember(object sender, EventArgs eventArgs)
         {
             var path = SelectedItemPaths.Single();
@@ -113,7 +141,7 @@ namespace GateShell
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             var left = ArgumentEscape(item.Tag.ToString());
-            var right = ArgumentEscape(SelectedItemPaths.Single());
+            var right = ArgumentEscape(SelectedItemPaths.First());
 
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var gateDiffExe = Path.Combine(assemblyDir, "GateDiff.exe");
