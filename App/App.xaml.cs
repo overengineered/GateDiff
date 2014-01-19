@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -26,6 +27,9 @@ namespace GateDiff
             base.OnStartup(e);
 
             CustomizationSection config = ConfigurationManager.GetSection("customization") as CustomizationSection;
+
+            bool swappingEnabled = false;
+            var args = e.Args.Where(arg => { bool m=(arg=="--swapping"); if(m)swappingEnabled=true; return!m; }).ToList();
 
             var left = e.Args.Length >= 2 ? new FileInfo(e.Args[0]) : null;
             var right = e.Args.Length >= 2 ? new FileInfo(e.Args[1]) : null;
@@ -56,7 +60,14 @@ namespace GateDiff
                 {
                     Executable program = config.Tools[toolKey];
 
-                    ProcessStartInfo command = new ProcessStartInfo(program.Path, BuildCommand(leftFile.Path, rightFile.Path));
+                    var arguments = new List<string>(3);
+                    arguments.Add(ArgumentEscape(leftFile.Path));
+                    arguments.Add(ArgumentEscape(rightFile.Path));
+
+                    if (swappingEnabled && !String.IsNullOrEmpty(program.SwappingParameter))
+                        arguments.Add(program.SwappingParameter);
+
+                    ProcessStartInfo command = new ProcessStartInfo(program.Path, String.Join(@" ", arguments));
                     command.UseShellExecute = false;
                     command.RedirectStandardOutput = true;
                     Process app = Process.Start(command);
@@ -71,21 +82,6 @@ namespace GateDiff
 
             StartupUri = new System.Uri(@"MainWindow.xaml", System.UriKind.Relative);
             DiffData = Tuple.Create(left, right);
-        }
-
-        private static string BuildCommand(params string[] args)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (string a in args)
-            {
-                if (string.IsNullOrEmpty(a))
-                    continue;
-
-                if (builder.Length > 0)
-                    builder.Append(@" ");
-                builder.Append(ArgumentEscape(a));
-            }
-            return builder.ToString();
         }
 
         private static string ArgumentEscape(string arg)

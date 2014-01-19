@@ -163,6 +163,7 @@ namespace GateDiff
         private static ConfigurationPropertyCollection s_properties;
         private static ConfigurationProperty s_key;
         private static ConfigurationProperty s_path;
+        private static ConfigurationProperty s_swappingParameter;
 
         static Executable()
         {
@@ -180,10 +181,18 @@ namespace GateDiff
                 ConfigurationPropertyOptions.IsRequired
             );
 
+            s_swappingParameter = new ConfigurationProperty(
+                "swappingParameter",
+                typeof(String),
+                null,
+                ConfigurationPropertyOptions.None
+            );
+
             s_properties = new ConfigurationPropertyCollection();
 
             s_properties.Add(s_key);
             s_properties.Add(s_path);
+            s_properties.Add(s_swappingParameter);
         }
 
         [ConfigurationProperty("key", IsRequired = true)]
@@ -196,6 +205,12 @@ namespace GateDiff
         public string Path
         {
             get { return (string)base[s_path]; }
+        }
+
+        [ConfigurationProperty("swappingParameter")]
+        public string SwappingParameter
+        {
+            get { return (string)base[s_swappingParameter]; }
         }
 
         protected override ConfigurationPropertyCollection Properties

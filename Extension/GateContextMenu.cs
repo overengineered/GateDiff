@@ -118,7 +118,7 @@ namespace GateShell
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var gateDiffExe = Path.Combine(assemblyDir, "GateDiff.exe");
 
-            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(@" ", left, right));
+            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(@" ", left, right, "--swapping"));
             Process.Start(command);
         }
 
