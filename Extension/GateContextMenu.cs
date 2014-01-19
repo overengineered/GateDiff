@@ -71,7 +71,8 @@ namespace GateShell
                 subitem.Click += this.OnRemember;
 
                 ToolStripMenuItem history = new ToolStripMenuItem() {
-                    Text = Res.Comparison_history
+                    Text = Res.Comparison_history,
+                    Image = Res.History
                 };
                 history.DropDownItems.Add(subitem);
 
