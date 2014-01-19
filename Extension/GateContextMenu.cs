@@ -105,14 +105,22 @@ namespace GateShell
         private void OnCompare(object sender, EventArgs eventArgs)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            var left = item.Tag.ToString();
-            var right = SelectedItemPaths.Single();
+            var left = ArgumentEscape(item.Tag.ToString());
+            var right = ArgumentEscape(SelectedItemPaths.Single());
 
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var gateDiffExe = Path.Combine(assemblyDir, "GateDiff.exe");
 
-            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(" ", left, right));
+            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(@" ", left, right));
             Process.Start(command);
         }
+
+        private static string ArgumentEscape(string arg)
+        {
+            if (arg.Contains(@" "))
+                return @"""" + arg + @"""";
+            return arg;
+        }
+
     }
 }
