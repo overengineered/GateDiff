@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Config.cs" />
     <Compile Include="DiffFile.cs" />
     <Compile Include="WindowPlacement.cs" />
     <Page Include="MainWindow.xaml">

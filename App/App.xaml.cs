@@ -13,6 +13,8 @@ namespace GateDiff
     /// </summary>
     public partial class App : Application
     {
+        public static readonly String GATEDIFF = "GateDiff";
+
         public Tuple<FileInfo, FileInfo> DiffData
         {
             get;
@@ -23,32 +25,38 @@ namespace GateDiff
         {
             base.OnStartup(e);
 
+            CustomizationSection config = ConfigurationManager.GetSection("customization") as CustomizationSection;
+
             var left = e.Args.Length >= 2 ? new FileInfo(e.Args[0]) : null;
             var right = e.Args.Length >= 2 ? new FileInfo(e.Args[1]) : null;
 
-            String diffProgram = null;
+            string toolKey = null;
             if (left != null && right != null)
             {
-                foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+                foreach (Case item in config.Rules)
                 {
-                    var extensions = key.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
+                    var extensions = item.Extensions.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
                     var foundDiffer = extensions.Contains(left.Extension)
                         || extensions.Contains(right.Extension)
                         || extensions.Contains(".*");
                     if (foundDiffer)
                     {
-                        diffProgram = ConfigurationManager.AppSettings[key];
-                        diffProgram = String.IsNullOrWhiteSpace(diffProgram) ? null : diffProgram;
+                        toolKey = item.Tool;
                         break;
                     }
                 }
             }
 
-            if (diffProgram != null)
+            if (String.IsNullOrEmpty(toolKey))
+                toolKey = config.Rules.Default;
+
+            if (!String.IsNullOrEmpty(toolKey) && toolKey != GATEDIFF)
             {
                 using (DiffFile leftFile = new DiffFile(left), rightFile = new DiffFile(right))
                 {
-                    ProcessStartInfo command = new ProcessStartInfo(diffProgram, BuildCommand(leftFile.Path, rightFile.Path));
+                    Executable program = config.Tools[toolKey];
+
+                    ProcessStartInfo command = new ProcessStartInfo(program.Path, BuildCommand(leftFile.Path, rightFile.Path));
                     command.UseShellExecute = false;
                     command.RedirectStandardOutput = true;
                     Process app = Process.Start(command);
