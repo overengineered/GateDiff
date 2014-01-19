@@ -15,6 +15,8 @@ my attempt to hide those flaws.
 
 * Icons are based on Wikipedia's [Nakayama Torii.svg](http://en.wikipedia.org/wiki/File:Nakayama_Torii.svg)
 * Uses [SharpShell](https://github.com/dwmkerr/sharpshell)
+* Config file parsing derived from [Jon Rista's article on Code Project]
+(http://www.codeproject.com/Articles/16466/Unraveling-the-Mysteries-of-NET-2-0-Configuration)
 
 ---
 Licensed under [cc by-sa](http://creativecommons.org/licenses/by-sa/3.0/)
