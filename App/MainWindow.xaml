@@ -33,27 +33,34 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Line Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" />
-        <Border Grid.Column="0" Grid.Row="0">
+        <ToolBarTray Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <ToolBar Band="1" BandIndex="1" ToolBarTray.IsLocked="True" Margin="0,0,-11,0" Loaded="ToolBar_Loaded">
+                <Button ToolBar.OverflowMode="Never" Click="Swap_Click">
+                    <Image Source="pack://application:,,,/GateDiff;component/swap.png" />
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Border Grid.Column="0" Grid.Row="1" BorderThickness="0 1 1 0">
             <TextBlock Text="{Binding Item1.FullName}" TextAlignment="Right" />
         </Border>
-        <Border Grid.Column="0" Grid.Row="1">
+        <Border Grid.Column="0" Grid.Row="2" BorderThickness="0 1 1 0">
             <TextBlock Text="{Binding Item1.Length, Mode=OneWay, StringFormat='\{0:N0\} bytes'}" TextAlignment="Right" />
         </Border>
-        <Border Grid.Column="0" Grid.Row="2">
+        <Border Grid.Column="0" Grid.Row="3" BorderThickness="0 1 1 0">
             <ScrollViewer>
                 <Image Source="{Binding Item1.FullName}" VerticalAlignment="Top" HorizontalAlignment="Right"/>
             </ScrollViewer>
         </Border>
-        <Border Grid.Column="1" Grid.Row="0" Name="abc">
+        <Border Grid.Column="1" Grid.Row="1" BorderThickness="0 1 0 0">
             <TextBlock Text="{Binding Item2.FullName}" />
         </Border>
-        <Border Grid.Column="1" Grid.Row="1">
+        <Border Grid.Column="1" Grid.Row="2" BorderThickness="0 1 0 0">
             <TextBlock Text="{Binding Item2.Length, Mode=OneWay, StringFormat='\{0:N0\} bytes'}" />
         </Border>
-        <Border Grid.Column="1" Grid.Row="2">
+        <Border Grid.Column="1" Grid.Row="3" BorderThickness="0 1 0 0">
             <ScrollViewer>
                 <Image Source="{Binding Item2.FullName}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             </ScrollViewer>
