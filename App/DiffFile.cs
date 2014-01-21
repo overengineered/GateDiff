@@ -11,7 +11,7 @@ namespace GateDiff
         public DiffFile(FileInfo file)
         {
             m_file = file;
-            if (!file.Exists)
+            if (!file.Exists && !Directory.Exists(file.FullName))
             {
                 m_temporary = System.IO.Path.GetTempFileName();
             }

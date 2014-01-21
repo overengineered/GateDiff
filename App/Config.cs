@@ -98,6 +98,7 @@ namespace GateDiff
     {
         private static ConfigurationPropertyCollection s_properties = new ConfigurationPropertyCollection();
         private static ConfigurationProperty s_default;
+        private static ConfigurationProperty s_folder;
 
         static Switch()
         {
@@ -108,14 +109,28 @@ namespace GateDiff
                 ConfigurationPropertyOptions.None
             );
 
+            s_folder = new ConfigurationProperty(
+                "folder",
+                typeof(String),
+                null,
+                ConfigurationPropertyOptions.None
+            );
+
             s_properties = new ConfigurationPropertyCollection();
             s_properties.Add(s_default);
+            s_properties.Add(s_folder);
         }
 
         [ConfigurationProperty("default")]
         public string Default
         {
             get { return (string)base[s_default]; }
+        }
+
+        [ConfigurationProperty("folder")]
+        public string FolderDiff
+        {
+            get { return (string)base[s_folder]; }
         }
 
         protected override ConfigurationPropertyCollection Properties

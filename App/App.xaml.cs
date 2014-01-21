@@ -34,22 +34,7 @@ namespace GateDiff
             var left = e.Args.Length >= 2 ? new FileInfo(e.Args[0]) : null;
             var right = e.Args.Length >= 2 ? new FileInfo(e.Args[1]) : null;
 
-            string toolKey = null;
-            if (left != null && right != null)
-            {
-                foreach (Case item in config.Rules)
-                {
-                    var extensions = item.Extensions.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
-                    var foundDiffer = extensions.Contains(left.Extension)
-                        || extensions.Contains(right.Extension)
-                        || extensions.Contains(".*");
-                    if (foundDiffer)
-                    {
-                        toolKey = item.Tool;
-                        break;
-                    }
-                }
-            }
+            string toolKey = SelectToolKey(config, ref left, ref right);
 
             if (String.IsNullOrEmpty(toolKey))
                 toolKey = config.Rules.Default;
@@ -82,6 +67,31 @@ namespace GateDiff
 
             StartupUri = new System.Uri(@"MainWindow.xaml", System.UriKind.Relative);
             DiffData = Tuple.Create(left, right);
+        }
+
+        private static string SelectToolKey(CustomizationSection config, ref FileInfo left, ref FileInfo right)
+        {
+            if (left == null || right == null)
+                return null;
+
+            bool leftIsDir = Directory.Exists(left.FullName);
+            bool rightIsDir = Directory.Exists(right.FullName);
+            if (leftIsDir || rightIsDir)
+            {
+                if (!leftIsDir) left = new FileInfo(left.DirectoryName);
+                if (!rightIsDir) right = new FileInfo(right.DirectoryName);
+                return config.Rules.FolderDiff;
+            }
+
+            foreach (Case item in config.Rules)
+            {
+                var extensions = item.Extensions.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
+                var foundDiffer = extensions.Contains(left.Extension) || extensions.Contains(right.Extension);
+                if (foundDiffer)
+                    return item.Tool;
+            }
+
+            return null;
         }
 
         private static string ArgumentEscape(string arg)

@@ -13,11 +13,12 @@ using System.Windows.Forms;
 namespace GateShell
 {
     [ComVisible(true)]
-    [COMServerAssociation(AssociationType.AllFiles)]
+    [COMServerAssociation(AssociationType.AllFiles | AssociationType.Directory)]
     [SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
     public class GateContextMenu : SharpContextMenu
     {
-        private static readonly string MRU_KEY = "mru";
+        private static readonly string MRU_FILES = "files";
+        private static readonly string MRU_DIRECTORIES = "dirs";
         private Lazy<State> m_registry = new Lazy<State>(() => new State(8));
 
         protected override bool CanShowMenu()
@@ -27,7 +28,7 @@ namespace GateShell
                 List<string> paths = SelectedItemPaths.ToList();
                 if (paths.Count <= 2)
                 {
-                    return paths.All(File.Exists);
+                    return paths.All(File.Exists) || paths.All(Directory.Exists);
                 }
 
                 return false;
@@ -58,7 +59,9 @@ namespace GateShell
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
-            IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(MRU_KEY).ToList();
+            String mruKey = Directory.Exists(currentPath) ? MRU_DIRECTORIES : MRU_FILES;
+
+            IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(mruKey).ToList();
             string mostRecentPath = savedPaths.FirstOrDefault();
 
             savedPaths = savedPaths.Where(path => path != currentPath);
@@ -134,7 +137,8 @@ namespace GateShell
         private void OnRemember(object sender, EventArgs eventArgs)
         {
             var path = SelectedItemPaths.Single();
-            m_registry.Value.InsertMruItem(MRU_KEY, path);
+            String mruKey = Directory.Exists(path) ? MRU_DIRECTORIES : MRU_FILES;
+            m_registry.Value.InsertMruItem(mruKey, path);
         }
 
         private void OnCompare(object sender, EventArgs eventArgs)
