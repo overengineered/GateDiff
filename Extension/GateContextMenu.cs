@@ -13,13 +13,14 @@ using System.Windows.Forms;
 namespace GateShell
 {
     [ComVisible(true)]
-    [COMServerAssociation(AssociationType.AllFiles | AssociationType.Directory)]
     [SuppressMessage("Microsoft.Interoperability", "CA1405:ComVisibleTypeBaseTypesShouldBeComVisible")]
-    public class GateContextMenu : SharpContextMenu
+    public abstract class GateContextMenu : SharpContextMenu
     {
-        private static readonly string MRU_FILES = "files";
-        private static readonly string MRU_DIRECTORIES = "dirs";
         private Lazy<State> m_registry = new Lazy<State>(() => new State(8));
+
+        protected abstract string MruKey { get; }
+
+        protected abstract bool IsPathAcceptable(string path);
 
         protected override bool CanShowMenu()
         {
@@ -28,7 +29,7 @@ namespace GateShell
                 List<string> paths = SelectedItemPaths.ToList();
                 if (paths.Count <= 2)
                 {
-                    return paths.All(File.Exists) || paths.All(Directory.Exists);
+                    return paths.All(IsPathAcceptable);
                 }
 
                 return false;
@@ -59,9 +60,7 @@ namespace GateShell
         {
             ContextMenuStrip menu = new ContextMenuStrip();
 
-            String mruKey = Directory.Exists(currentPath) ? MRU_DIRECTORIES : MRU_FILES;
-
-            IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(mruKey).ToList();
+            IEnumerable<string> savedPaths = m_registry.Value.GetMruItems(MruKey).ToList();
             string mostRecentPath = savedPaths.FirstOrDefault();
 
             savedPaths = savedPaths.Where(path => path != currentPath);
@@ -137,8 +136,7 @@ namespace GateShell
         private void OnRemember(object sender, EventArgs eventArgs)
         {
             var path = SelectedItemPaths.Single();
-            String mruKey = Directory.Exists(path) ? MRU_DIRECTORIES : MRU_FILES;
-            m_registry.Value.InsertMruItem(mruKey, path);
+            m_registry.Value.InsertMruItem(MruKey, path);
         }
 
         private void OnCompare(object sender, EventArgs eventArgs)
@@ -162,4 +160,29 @@ namespace GateShell
         }
 
     }
+
+    [ComVisible(true)]
+    [COMServerAssociation(AssociationType.AllFiles)]
+    public class GateFileContextMenu : GateContextMenu
+    {
+        protected override string MruKey { get { return "files"; } }
+
+        protected override bool IsPathAcceptable(string path)
+        {
+            return File.Exists(path);
+        }
+    }
+
+    [ComVisible(true)]
+    [COMServerAssociation(AssociationType.Directory)]
+    public class GateDirecoryContextMenu : GateContextMenu
+    {
+        protected override string MruKey { get { return "dirs"; } }
+
+        protected override bool IsPathAcceptable(string path)
+        {
+            return Directory.Exists(path);
+        }
+    }
+
 }
