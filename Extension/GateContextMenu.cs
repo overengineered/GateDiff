@@ -76,6 +76,12 @@ namespace GateShell
             }
             else
             {
+                ToolStripMenuItem history = new ToolStripMenuItem()
+                {
+                    Text = Res.Comparison_history,
+                    Image = Res.History
+                };
+
                 if (currentPath != mostRecentPath)
                 {
                     ToolStripMenuItem item = new ToolStripMenuItem {
@@ -85,21 +91,16 @@ namespace GateShell
                     };
                     item.Click += this.OnCompare;
                     menu.Items.Add(item);
+
+                    ToolStripMenuItem subitem = new ToolStripMenuItem
+                    {
+                        Text = String.Format(Res.Remember_X, currentPath),
+                        Image = Res.Remember
+                    };
+                    subitem.Click += this.OnRemember;
+                    history.DropDownItems.Add(subitem);
+                    history.DropDownItems.Add(new ToolStripSeparator());
                 }
-
-                ToolStripMenuItem subitem = new ToolStripMenuItem {
-                    Text = String.Format(Res.Remember_X, currentPath),
-                    Image = Res.Remember
-                };
-                subitem.Click += this.OnRemember;
-
-                ToolStripMenuItem history = new ToolStripMenuItem() {
-                    Text = Res.Comparison_history,
-                    Image = Res.History
-                };
-                history.DropDownItems.Add(subitem);
-
-                history.DropDownItems.Add(new ToolStripSeparator());
 
                 foreach (string path in savedPaths)
                 {
