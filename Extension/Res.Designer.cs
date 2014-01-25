@@ -71,7 +71,7 @@ namespace GateShell {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}.
+        ///   Looks up a localized string similar to {0} ∩ ◨.
         /// </summary>
         internal static string Compare_to_X {
             get {
@@ -80,7 +80,7 @@ namespace GateShell {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compare {0} to {1}.
+        ///   Looks up a localized string similar to {0} ∩ {1}.
         /// </summary>
         internal static string Compare_X_to_Y {
             get {
@@ -118,7 +118,7 @@ namespace GateShell {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remember for comparison.
+        ///   Looks up a localized string similar to Remember.
         /// </summary>
         internal static string Remember_for_comparison {
             get {
@@ -127,7 +127,7 @@ namespace GateShell {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}.
+        ///   Looks up a localized string similar to Remember {0}.
         /// </summary>
         internal static string Remember_X {
             get {

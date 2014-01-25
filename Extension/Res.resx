@@ -122,7 +122,7 @@
     <value>Resouces\compare.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Compare_to_X" xml:space="preserve">
-    <value>{0}</value>
+    <value>{0} ∩ ◨</value>
   </data>
   <data name="Comparison_history" xml:space="preserve">
     <value>History</value>
@@ -131,15 +131,15 @@
     <value>Resouces\remember.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Remember_for_comparison" xml:space="preserve">
-    <value>Remember for comparison</value>
+    <value>Remember</value>
   </data>
   <data name="Remember_X" xml:space="preserve">
-    <value>{0}</value>
+    <value>Remember {0}</value>
   </data>
   <data name="History" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resouces\History.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Compare_X_to_Y" xml:space="preserve">
-    <value>Compare {0} to {1}</value>
+    <value>{0} ∩ {1}</value>
   </data>
 </root>
