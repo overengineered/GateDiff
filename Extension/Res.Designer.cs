@@ -71,7 +71,7 @@ namespace GateShell {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} ∩ ◨.
+        ///   Looks up a localized string similar to {0} ∩ ▢.
         /// </summary>
         internal static string Compare_to_X {
             get {
