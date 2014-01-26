@@ -126,7 +126,16 @@ namespace GateShell
             ToolStripMenuItem item = new ToolStripMenuItem {
                 Text = String.Format(Res.Compare_X_to_Y, Path.GetFileName(path2), Path.GetFileName(path1)),
                 Image = Res.Compare,
-                Tag = path2
+                Tag = new Tuple<String, String>(path2, path1)
+            };
+            item.Click += this.OnCompare;
+            menu.Items.Add(item);
+
+            item = new ToolStripMenuItem
+            {
+                Text = String.Format(Res.Compare_X_to_Y, Path.GetFileName(path1), Path.GetFileName(path2)),
+                Image = Res.Compare,
+                Tag = new Tuple<String, String>(path1, path2)
             };
             item.Click += this.OnCompare;
             menu.Items.Add(item);
@@ -143,13 +152,24 @@ namespace GateShell
         private void OnCompare(object sender, EventArgs eventArgs)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            var left = ArgumentEscape(item.Tag.ToString());
-            var right = ArgumentEscape(SelectedItemPaths.First());
+
+            string diffArgs;
+            if (item.Tag is String)
+            {
+                var left = ArgumentEscape(item.Tag.ToString());
+                var right = ArgumentEscape(SelectedItemPaths.Single());
+                diffArgs = String.Join(@" ", left, right, "--swapping");
+            }
+            else
+            {
+                var pair = (Tuple<String, String>)item.Tag;
+                diffArgs = String.Join(@" ", ArgumentEscape(pair.Item1), ArgumentEscape(pair.Item2));
+            }
 
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var gateDiffExe = Path.Combine(assemblyDir, "GateDiff.exe");
 
-            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, String.Join(@" ", left, right, "--swapping"));
+            ProcessStartInfo command = new ProcessStartInfo(gateDiffExe, diffArgs);
             Process.Start(command);
         }
 
