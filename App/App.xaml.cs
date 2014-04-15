@@ -85,8 +85,15 @@ namespace GateDiff
 
             foreach (Case item in config.Rules)
             {
-                var extensions = item.Extensions.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
-                var foundDiffer = extensions.Contains(left.Extension) || extensions.Contains(right.Extension);
+                var foundDiffer = true;
+                if (item.Extensions != null)
+                {
+                    var extensions = item.Extensions.Split(' ').Where(x => !String.IsNullOrWhiteSpace(x));
+                    foundDiffer = foundDiffer && extensions.Contains(left.Extension) || extensions.Contains(right.Extension);
+                }
+
+                foundDiffer = foundDiffer && (left.Length > item.SizeGreaterThan || right.Length > item.SizeGreaterThan);
+
                 if (foundDiffer)
                     return item.Tool;
             }

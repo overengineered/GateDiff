@@ -168,7 +168,7 @@ namespace GateDiff
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return (element as Case).Extensions;
+            return element;
         }
     }
 
@@ -239,6 +239,7 @@ namespace GateDiff
     {
         private static ConfigurationPropertyCollection s_properties;
         private static ConfigurationProperty s_extensions;
+        private static ConfigurationProperty s_sizeGreaterThan;
         private static ConfigurationProperty s_tool;
 
         static Case()
@@ -247,7 +248,14 @@ namespace GateDiff
                 "extensions",
                 typeof(String),
                 null,
-                ConfigurationPropertyOptions.IsRequired
+                ConfigurationPropertyOptions.None
+            );
+
+            s_sizeGreaterThan = new ConfigurationProperty(
+                "sizeGreaterThan",
+                typeof(String),
+                null,
+                ConfigurationPropertyOptions.None
             );
 
             s_tool = new ConfigurationProperty(
@@ -260,13 +268,20 @@ namespace GateDiff
             s_properties = new ConfigurationPropertyCollection();
 
             s_properties.Add(s_extensions);
+            s_properties.Add(s_sizeGreaterThan);
             s_properties.Add(s_tool);
         }
 
-        [ConfigurationProperty("extensions", IsRequired = true)]
+        [ConfigurationProperty("extensions", IsRequired = false)]
         public string Extensions
         {
             get { return (string)base[s_extensions]; }
+        }
+
+        [ConfigurationProperty("sizeGreaterThan", IsRequired = false)]
+        public long SizeGreaterThan
+        {
+            get { return Convert.ToInt64(base[s_sizeGreaterThan]); }
         }
 
         [ConfigurationProperty("tool", IsRequired = true)]
